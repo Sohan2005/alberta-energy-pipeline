@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# AWS
+.aws/
+
+# IDE
+.vscode/
+.idea/
