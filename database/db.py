@@ -12,24 +12,22 @@ if not SUPABASE_URL or not SUPABASE_KEY:
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-def get_record_count():
+def get_total_count():
     response = supabase.table("pool_prices").select("id", count="exact").execute()
     return response.count
 
 def insert_records(records):
-    # bug: checking count before and after doesn't tell us
-    # how many were truly new vs updated
-    before = get_record_count()
-
     response = (
         supabase.table("pool_prices")
         .upsert(records, on_conflict="begin_datetime_utc")
         .execute()
     )
 
-    after = get_record_count()
-    new_records = after - before
-    print(f"New records inserted: {new_records}")
-    print(f"Total records in database: {after}")
+    # track directly from the response
+    upserted = len(response.data) if response.data else 0
+    total = get_total_count()
+
+    print(f"Upserted {upserted} records (new + updated)")
+    print(f"Total records in database: {total}")
 
     return response
