@@ -2,6 +2,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
+from transform import transform_records
 
 load_dotenv()
 
@@ -48,4 +49,7 @@ def fetch_pool_prices():
     return settled_records
 
 if __name__ == "__main__":
-    fetch_pool_prices()
+    raw = fetch_pool_prices()
+    cleaned = transform_records(raw)
+    print("\nSample cleaned record:")
+    print(cleaned[0])
