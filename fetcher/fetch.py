@@ -3,6 +3,10 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime, timedelta, timezone
 from transform import transform_records
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from database.db import insert_records
 
 load_dotenv()
 
@@ -51,5 +55,6 @@ def fetch_pool_prices():
 if __name__ == "__main__":
     raw = fetch_pool_prices()
     cleaned = transform_records(raw)
-    print("\nSample cleaned record:")
-    print(cleaned[0])
+    print("\nInserting into Supabase...")
+    result = insert_records(cleaned)
+    print(f"Done. Upserted {len(cleaned)} records.")
