@@ -9,3 +9,12 @@ CREATE TABLE pool_prices (
     CONSTRAINT unique_pool_price_record
         UNIQUE (begin_datetime_utc)
 );
+
+CREATE INDEX idx_pool_prices_utc
+    ON pool_prices(begin_datetime_utc);
+
+CREATE INDEX idx_pool_prices_mpt
+    ON pool_prices(begin_datetime_mpt);
+
+CREATE INDEX idx_pool_prices_pool_price
+    ON pool_prices(pool_price);
