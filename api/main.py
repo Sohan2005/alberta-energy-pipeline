@@ -1,12 +1,10 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from supabase import create_client, Client
 from dotenv import load_dotenv
 
 load_dotenv()
 
-# initialize supabase client once at startup
-# not on every request
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
@@ -36,6 +34,30 @@ def get_records():
         .select("*")
         .order("begin_datetime_utc", desc=True)
         .limit(50)
+        .execute()
+    )
+    return response.data
+
+# bug: no pagination - returns ALL matching records at once
+@app.get("/records/range")
+def get_by_date_range(start: str, end: str):
+    response = (
+        supabase.table("pool_prices")
+        .select("*")
+        .gte("begin_datetime_utc", start)
+        .lte("begin_datetime_utc", end)
+        .order("begin_datetime_utc", desc=False)
+        .execute()
+    )
+    return response.data
+
+@app.get("/records/latest")
+def get_latest():
+    response = (
+        supabase.table("pool_prices")
+        .select("*")
+        .order("begin_datetime_utc", desc=True)
+        .limit(24)
         .execute()
     )
     return response.data
