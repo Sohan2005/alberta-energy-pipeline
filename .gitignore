@@ -14,3 +14,7 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# Lambda deployment package
+lambda_package.zip
+lambda/package/
