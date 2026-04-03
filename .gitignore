@@ -18,3 +18,4 @@ __pycache__/
 # Lambda deployment package
 lambda_package.zip
 lambda/package/
+*.db
