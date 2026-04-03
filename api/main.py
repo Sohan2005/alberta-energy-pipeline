@@ -1,4 +1,6 @@
 import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 import logging
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,6 +36,20 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"]
 )
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/")
+def serve_frontend():
+    return FileResponse("static/index.html")
+
+@app.get("/api/health")
+def health_check():
+    return {
+        "status": "ok",
+        "service": "Alberta Energy API",
+        "version": "1.0.0"
+    }
 
 
 @app.get("/health")
