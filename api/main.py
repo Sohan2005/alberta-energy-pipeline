@@ -28,6 +28,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
+from fastapi.responses import JSONResponse
+from fastapi import Request
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled exception on {request.url}: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"status": "error", "message": "An unexpected error occurred."}
+    )
+
 # CORS middleware - must be added before any routes
 app.add_middleware(
     CORSMiddleware,
